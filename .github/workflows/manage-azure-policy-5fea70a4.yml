@@ -1,0 +1,34 @@
+name: manage-azure-policy-5fea70a4
+on:
+  workflow_dispatch:
+    inputs:
+      remarks:
+        description: 'Reason for triggering the workflow run'
+        required: false
+        default: 'Updating Azure Policies'
+
+
+## Uncomment the following if you wish to automatically trigger workflow run with every commit
+#
+#  push:
+#    paths:
+#      - 'initiatives/Deny-Public-Endpoints-for-PaaS-Services_Deny-PublicEndpoints/**'
+#      - 'initiatives/Deploy-Diag-LogAnalytics_Deploy-Diag-LogAnalytics/**'
+#      - .github/workflows/manage-azure-policy-5fea70a4.yml
+jobs:
+  apply-azure-policy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{secrets.AZURE_CREDENTIALS_5fea70a4}}
+        allow-no-subscriptions: true
+    - name: Create or Update Azure Policies
+      uses: azure/manage-azure-policy@v0
+      with:
+        paths: |
+          initiatives/Deny-Public-Endpoints-for-PaaS-Services_Deny-PublicEndpoints/**
+          initiatives/Deploy-Diag-LogAnalytics_Deploy-Diag-LogAnalytics/**
